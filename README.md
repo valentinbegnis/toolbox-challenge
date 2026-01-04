@@ -64,7 +64,7 @@ Each CSV line is considered **valid** only if it meets all of the following crit
 - `hex` is a hexadecimal string of **exactly 32 characters**
 
 Although the external API may return lines where the `hex` field has fewer than
-32 characters (see test18.csv lines), those lines are treated as **invalid** and are discarded to ensure the output follows the specification.
+32 characters, those lines are treated as **invalid** and are discarded to ensure the output follows the specification.
 
 Files that do not contain any valid lines are also excluded from the final response.
 
