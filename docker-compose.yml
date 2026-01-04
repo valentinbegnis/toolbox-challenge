@@ -1,0 +1,16 @@
+services:
+  api:
+    build: ./api
+    ports:
+      - "${API_PORT:-3001}:3001"
+    env_file:
+      - ./.env
+
+  web:
+    build: ./web
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    env_file:
+      - ./.env
+    depends_on:
+      - api
