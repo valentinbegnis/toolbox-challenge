@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Container, Row, Col, Badge } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchFilesData, setSelectedFile } from '../store/filesSlice'
+import { fetchFilesData } from '../store/filesSlice'
 import FilesTable from '../components/FilesTable'
 import LoadingState from '../components/LoadingState'
 import ErrorState from '../components/ErrorState'
@@ -9,17 +9,24 @@ import { Form } from 'react-bootstrap'
 
 export default function FilesPage () {
   const dispatch = useDispatch()
-  const { selectedFile, data, loading, error } = useSelector((s) => s.files)
+  const { data, loading, error } = useSelector((s) => s.files)
+
+  const [search, setSearch] = useState('')
+  const isFirstRender = useRef(true)
 
   useEffect(() => {
-    dispatch(fetchFilesData(''))
-  }, [dispatch])
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      dispatch(fetchFilesData(''))
+      return
+    }
 
-  const onSearchChange = (e) => {
-    const value = e.target.value
-    dispatch(setSelectedFile(value))
-    dispatch(fetchFilesData(value))
-  }
+    const timeout = setTimeout(() => {
+      dispatch(fetchFilesData(search))
+    }, 400)
+
+    return () => clearTimeout(timeout)
+  }, [search, dispatch])
 
   const totalLines = data.reduce((acc, f) => acc + f.lines.length, 0)
 
@@ -39,9 +46,9 @@ export default function FilesPage () {
           <Col md={6} lg={4}>
             <Form.Control
               type="search"
-              placeholder="Search by file name (e.g. test1.csv)"
-              value={selectedFile}
-              onChange={onSearchChange}
+              placeholder="Search by file name (e.g. test1)"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </Col>
         </Row>

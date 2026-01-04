@@ -12,15 +12,11 @@ export const fetchFilesData = createAsyncThunk(
 const filesSlice = createSlice({
   name: 'files',
   initialState: {
-    selectedFile: '',
     data: [],
     loading: false,
     error: null
   },
   reducers: {
-    setSelectedFile (state, action) {
-      state.selectedFile = action.payload
-    },
     clearError (state) {
       state.error = null
     }
@@ -42,5 +38,5 @@ const filesSlice = createSlice({
   }
 })
 
-export const { setSelectedFile, clearError } = filesSlice.actions
+export const { clearError } = filesSlice.actions
 export default filesSlice.reducer
