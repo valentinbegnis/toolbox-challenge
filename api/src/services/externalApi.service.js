@@ -24,7 +24,8 @@ async function fetchAndFormatFiles (fileName) {
   let files = await fetchFilesList()
 
   if (fileName) {
-    files = files.filter(f => f === fileName)
+    const query = fileName.toLowerCase()
+    files = files.filter(f => f.toLowerCase().includes(query))
   }
 
   const results = await Promise.allSettled(
@@ -33,6 +34,10 @@ async function fetchAndFormatFiles (fileName) {
         const csv = await fetchFileContent(file)
         const lines = parseCsvContent(csv, file)
 
+        if (lines.length === 0) {
+          return null
+        }
+        
         return {
           file,
           lines
